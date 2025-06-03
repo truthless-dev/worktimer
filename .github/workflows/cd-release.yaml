@@ -6,35 +6,40 @@ on:
       - 'v*'
 
 jobs:
-  build:
-    name: Build
+  release-build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version-file: '.python-version'
-      - name: Install dependencies
+            python-version-file: '.python-version'
+
+      - name: build release distributions
         run: |
           pip install poetry
           poetry install
-      - name: Build dist
-        run: |
           poetry build
-      - uses: actions/upload-artifact@v3
+
+      - name: upload windows dists
+        uses: actions/upload-artifact@v4
         with:
-          path: ./dist
+          name: release-dists
+          path: dist/
 
   pypi-publish:
-    name: Publish to PyPI
-    needs: ['build']
-    environment: 'release'
     runs-on: ubuntu-latest
+    needs:
+      - release-build
     permissions:
       id-token: write
+
     steps:
-      - uses: actions/download-artifact@v3
-      - name: Publish
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Retrieve release distributions
+        uses: actions/download-artifact@v4
         with:
-          packages_dir: artifact/
+          name: release-dists
+          path: dist/
+
+      - name: Publish release distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f
