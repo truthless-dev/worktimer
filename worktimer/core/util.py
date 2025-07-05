@@ -64,6 +64,30 @@ def get_app_dir() -> str:
     return get_app_dir("WorkTimer", True, False)
 
 
+def make_app_dir() -> bool:
+    """
+    Ensure that the application data directory exists
+
+    Attempt to create it if it does not.
+
+    :return: Whether the directory now exists
+    :rtype: bool
+    """
+    from pathlib import Path
+
+    from worktimer.core import const
+
+    directory = Path(const.PATH_APP)
+    if directory.exists():
+        return True
+    try:
+        directory.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return False
+    directory.chmod(0o755)  # drwxr-xr-x
+    return True
+
+
 def now() -> datetime:
     """
     Get the current date and time
