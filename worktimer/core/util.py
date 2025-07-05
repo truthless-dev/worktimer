@@ -2,7 +2,41 @@
 Application utility functions.
 """
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, time, timedelta
+
+
+def format_date(date: datetime | date) -> str:
+    """
+    Format a date in a human-friendly way
+
+    The exact output depends on the system locale. :meth:`datetime.strftime`
+    is used to do the formatting.
+
+    :param date: The date to format. Note that, if a :class:`datetime`
+        is given, time attributes are ignored.
+    :type date: :class:`date` or :class:`datetime`
+
+    :return: A human-friendly format of the date.
+    :rtype: str
+    """
+    return date.strftime("%A, %d %B %Y")
+
+
+def format_time(time: datetime | time) -> str:
+    """
+    Format a time in a human-friendly way
+
+    The exact output depends on the system locale. :class:`datetime.strftime`
+    is used to do the formatting.
+
+    :param time: The date to format. Note that, if a :class:`datetime`
+        is given, date attributes are ignored.
+    :type time: :class:`time` or :class:`datetime`
+
+    :return: A human-friendly format of the time.
+    :rtype: str
+    """
+    return time.strftime("%I:%M%p")
 
 
 def get_app_dir() -> str:
@@ -47,3 +81,47 @@ def now() -> datetime:
     # Remove the microseconds.
     dt -= timedelta(microseconds=dt.microsecond)
     return dt
+
+
+def time_difference(start: datetime, stop: datetime) -> timedelta:
+    """
+    Calculate the difference between two times
+
+    :param start: The earlier moment.
+    :type start: :class:`datetime`
+    :param stop: The later moment.
+    :type stop: :class:`datetime`
+
+    :return: The length of time from `start` to `stop`.
+    :rtype: :class:`timedelta`
+    """
+    return stop - start
+
+
+def weekday_name(weekday: int, abbreviate: bool = False) -> str:
+    """
+    Convert a weekday (0-6) to a string (Mon-Sun).
+
+    :param weekday: 0-6 representing the day of the week. Monday is 0.
+    :type weekday: int
+    :param Abbreviate: Whether to abbreviate the resulting name to
+        its first three letters (e.g., "Monday" becomes "Mon").
+    :type abbreviate: bool
+
+    :return: The name of the given weekday, or "N/A" if `weekday` is not
+        between 0 and 6 (inclusive).
+    :rtype: str
+    """
+    days = (
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    )
+    if not (0 <= weekday < len(days)):
+        return "N/A"
+    name = days[weekday]
+    return name if not abbreviate else name[:3]
