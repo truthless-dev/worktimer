@@ -42,7 +42,6 @@ use_parentheses = true
 [tool.commitizen]
 annotated_tags = true
 changelog_file = "CHANGELOG.rst"
-major_version_zero = true
 tag_format = "v$version"
 template = "CHANGELOG.rst.j2"
 update_changelog_on_bump = true
