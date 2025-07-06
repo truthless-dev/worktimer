@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "worktimer"
-version = "0.1.0"
+version = "1.0.0"
 description = "Simple tracker of time spent on the job"
 authors = ["truthless-dev <truthless.deviant248@simplelogin.fr>"]
 license = "MIT"
@@ -45,7 +45,7 @@ changelog_file = "CHANGELOG.rst"
 tag_format = "v$version"
 template = "CHANGELOG.rst.j2"
 update_changelog_on_bump = true
-version = "0.1.0"
+version = "1.0.0"
 version_files = ["pyproject.toml:version"]
 
 [build-system]
