@@ -23,5 +23,4 @@ def day(date: str):
 
     wt = create_worktimer()
     msg = wt.get_daily_time_worked(dt)
-    wt.db.close()
     click.echo(msg)

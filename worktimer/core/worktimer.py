@@ -34,16 +34,20 @@ class WorkTimer:
         :rtype: str
         """
         now = util.now()
+        self.db.connect()
         events = self.db.get_daily_events(now)
 
         # Make sure that we don't start the clock if it is already
         # running (i.e., if the latest event is a start event).
         if len(events) > 0 and events[-1]["working"]:
+            self.db.close()
             return "You are already on the clock."
 
         # Now it's safe to try to log this event.
         if self.db.log_event(now, True):
+            self.db.close()
             return "You are now on the clock."
+        self.db.close()
         return f"ERROR: Failed to log event ({now}, 1)."
 
     def log_work_end(self) -> str:
@@ -56,16 +60,20 @@ class WorkTimer:
         :rtype: str
         """
         now = util.now()
+        self.db.connect()
         events = self.db.get_daily_events(now)
 
         # Make sure that we don't stop the clock if it is already
         # stopped (i.e., if the latest event is a stop event).
         if len(events) == 0 or not events[-1]["working"]:
+            self.db.close()
             return "You are already off the clock."
 
         # Now it's safe to try to log the event.
         if self.db.log_event(now, False):
+            self.db.close()
             return "You are no longer on the clock."
+        self.db.close()
         return f"ERROR: Failed to log event ({now}, 0)."
 
     def calculate_daily_blocks(self, events: list) -> tuple:
@@ -164,7 +172,10 @@ class WorkTimer:
         header = f"Time Worked on {util.format_date(dt)}\n"
         results.append(header)
 
+        self.db.connect()
         events = self.db.get_daily_events(dt)
+        self.db.close()
+
         total_time, blocks = self.calculate_daily_blocks(events)
         for block in blocks:
             start, stop, duration = block
@@ -202,7 +213,10 @@ class WorkTimer:
         header = f"Time worked through the Week of {util.format_date(dt)}\n"
         results.append(header)
 
+        self.db.connect()
         events = self.db.get_weekly_events(dt)
+        self.db.close()
+
         total_time, blocks = self.calculate_weekly_blocks(events)
         for i, daily_time in enumerate(blocks):
             # Convert each day number (0-6) to the name of that day.

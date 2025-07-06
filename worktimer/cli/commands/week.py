@@ -23,5 +23,4 @@ def week(date: str):
 
     wt = create_worktimer()
     msg = wt.get_weekly_time_worked(dt)
-    wt.db.close()
     click.echo(msg)

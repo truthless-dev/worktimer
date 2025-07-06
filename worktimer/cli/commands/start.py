@@ -8,5 +8,4 @@ def start():
 
     wt = create_worktimer()
     msg = wt.log_work_start()
-    wt.db.close()
     click.echo(msg)

@@ -8,5 +8,4 @@ def stop():
 
     wt = create_worktimer()
     msg = wt.log_work_end()
-    wt.db.close()
     click.echo(msg)

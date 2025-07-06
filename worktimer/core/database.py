@@ -21,15 +21,18 @@ class Database:
             connect.
         :type file_name: str
         """
-        self.connection = sqlite3.connect(file_name)
-        self.cursor = self.connection.cursor()
-
-        # Return rows as dict-like objects.
-        self.cursor.row_factory = sqlite3.Row
-
+        self.file_name = file_name
         # Do any necessary setup transparently.
+        self.connect()
         self._create_tables()
         self._ensure_time_pairs()
+        self.close()
+
+    def connect(self):
+        self.connection = sqlite3.connect(self.file_name)
+        self.cursor = self.connection.cursor()
+        # Return rows as dict-like objects.
+        self.cursor.row_factory = sqlite3.Row
 
     def _create_tables(self) -> bool:
         """
@@ -167,6 +170,8 @@ class Database:
         Close the connection to the database.
         """
         self.connection.close()
+        self.connection = None
+        self.cursor = None
 
     def get_daily_events(self, dt: datetime) -> list:
         """
